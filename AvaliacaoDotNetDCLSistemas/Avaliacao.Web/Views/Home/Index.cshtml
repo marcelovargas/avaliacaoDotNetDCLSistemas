@@ -2,7 +2,42 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h1>Avaliação DotNet DCL Sistemas</h1>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4" align="center">
+
+        <h2><p align="center">Venta de carros</p></h2>
+        <a href='@Url.Action("Index", "CarSales")'>
+            <img src="~/Images/car.png" width="200" height="200" alt="cars" />
+        </a>
+        <p></p>
+        <p></p>
+
+    </div>
+
+    <div class="col-md-4" align="center">
+
+        <h2><p align="center">Ligações</p></h2>
+        <a href='@Url.Action("Index", "Calls")'>
+            <img src="~/Images/call.png" width="200" height="200" alt="calls"/>
+        </a>
+        <p></p>
+        <p></p>
+
+    </div>
+
+    <div class="col-md-4" align="center">
+
+        <h2><p align="center">Parametros</p></h2>
+        <a href='@Url.Action("Index", "Parameters")'>
+            <img src="~/Images/parameter.png" width="200" height="200" alt="parametres" />
+        </a>
+        <p></p>
+        <p></p>
+
+    </div>
 </div>
