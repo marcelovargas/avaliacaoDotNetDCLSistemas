@@ -11,9 +11,9 @@
 </p>*@
 <table class="table">
     <thead>
-        <tr>
+        <tr class="bg-primary text-white text-center">
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                <text>Parâmetro</text>
             </th>
             
             <th></th>
@@ -23,13 +23,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                <text>Atual</text>
             </td>
            
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Mostrar</a>
+                
             </td>
         </tr>
 }

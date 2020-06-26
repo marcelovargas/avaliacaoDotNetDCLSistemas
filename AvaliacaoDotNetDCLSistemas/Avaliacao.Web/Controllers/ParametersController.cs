@@ -1,14 +1,11 @@
 ﻿namespace Avaliacao.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
-    using Microsoft.EntityFrameworkCore;
     using Avaliacao.Data.Data;
     using Avaliacao.Data.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class ParametersController : Controller
     {
@@ -33,7 +30,7 @@
                 return NotFound();
             }
 
-            var parameter = await _context.Parameters
+            Parameter parameter = await _context.Parameters
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (parameter == null)
             {
@@ -43,27 +40,7 @@
             return View(parameter);
         }
 
-        // GET: Parameters/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: Parameters/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BaseSalary,Commission,BaseRate,SecondRate")] Parameter parameter)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(parameter);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(parameter);
-        }
 
         // GET: Parameters/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -73,7 +50,7 @@
                 return NotFound();
             }
 
-            var parameter = await _context.Parameters.FindAsync(id);
+            Parameter parameter = await _context.Parameters.FindAsync(id);
             if (parameter == null)
             {
                 return NotFound();
@@ -82,11 +59,10 @@
         }
 
         // POST: Parameters/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BaseSalary,Commission,BaseRate,SecondRate")] Parameter parameter)
+        public async Task<IActionResult> Edit(int id,  Parameter parameter)
         {
             if (id != parameter.Id)
             {
@@ -116,34 +92,6 @@
             return View(parameter);
         }
 
-        // GET: Parameters/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var parameter = await _context.Parameters
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (parameter == null)
-            {
-                return NotFound();
-            }
-
-            return View(parameter);
-        }
-
-        // POST: Parameters/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var parameter = await _context.Parameters.FindAsync(id);
-            _context.Parameters.Remove(parameter);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool ParameterExists(int id)
         {
