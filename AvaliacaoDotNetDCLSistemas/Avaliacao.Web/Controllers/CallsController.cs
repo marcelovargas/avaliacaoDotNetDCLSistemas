@@ -3,31 +3,46 @@
     using Avaliacao.Core;
     using Avaliacao.Data.Data;
     using Avaliacao.Data.Models;
+    using Avaliacao.Web.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class CarSalesController : Controller
+    public class CallsController : Controller
     {
         private readonly DataContext _context;
 
-        public CarSalesController(DataContext context)
+        public CallsController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: CarSales
+        // GET: Calls
         public async Task<IActionResult> Index()
         {
-            var list = await _context.Sales.ToListAsync();
+            var list = await _context.Calls.ToListAsync();
+            var list2 = new List<CallView>();
             var parameter = _context.Parameters.FirstOrDefault();
 
-            ViewBag.Salary = Calculation.Salary(list, parameter);
-            return View(list);
+            foreach (var item in list)
+            {
+                var view = new CallView()
+                {
+                    Id = item.Id,
+                    Begin = item.Begin,
+                    End = item.End,
+                    Price = Calculation.CallCost(item, parameter),
+                    
+                };
+
+                list2.Add(view);
+            }
+            return View(list2);
         }
 
-        // GET: CarSales/Details/5
+        // GET: Calls/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,38 +50,39 @@
                 return NotFound();
             }
 
-            CarSale carSale = await _context.Sales
+            Call call = await _context.Calls
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carSale == null)
+            if (call == null)
             {
                 return NotFound();
             }
 
-            return View(carSale);
+            return View(call);
         }
 
-        // GET: CarSales/Create
+        // GET: Calls/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: CarSales/Create
-
+        // POST: Calls/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CarSale carSale)
+        public async Task<IActionResult> Create([Bind("Id,Begin,End")] Call call)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(carSale);
+                _context.Add(call);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(carSale);
+            return View(call);
         }
 
-        // GET: CarSales/Edit/5
+        // GET: Calls/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,21 +90,22 @@
                 return NotFound();
             }
 
-            CarSale carSale = await _context.Sales.FindAsync(id);
-            if (carSale == null)
+            Call call = await _context.Calls.FindAsync(id);
+            if (call == null)
             {
                 return NotFound();
             }
-            return View(carSale);
+            return View(call);
         }
 
-        // POST: CarSales/Edit/5
-
+        // POST: Calls/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CarSale carSale)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Begin,End")] Call call)
         {
-            if (id != carSale.Id)
+            if (id != call.Id)
             {
                 return NotFound();
             }
@@ -97,12 +114,12 @@
             {
                 try
                 {
-                    _context.Update(carSale);
+                    _context.Update(call);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarSaleExists(carSale.Id))
+                    if (!CallExists(call.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +130,10 @@
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(carSale);
+            return View(call);
         }
 
-        // GET: CarSales/Delete/5
+        // GET: Calls/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +141,30 @@
                 return NotFound();
             }
 
-            CarSale carSale = await _context.Sales
+            Call call = await _context.Calls
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carSale == null)
+            if (call == null)
             {
                 return NotFound();
             }
 
-            return View(carSale);
+            return View(call);
         }
 
-        // POST: CarSales/Delete/5
+        // POST: Calls/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            CarSale carSale = await _context.Sales.FindAsync(id);
-            _context.Sales.Remove(carSale);
+            Call call = await _context.Calls.FindAsync(id);
+            _context.Calls.Remove(call);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarSaleExists(int id)
+        private bool CallExists(int id)
         {
-            return _context.Sales.Any(e => e.Id == id);
+            return _context.Calls.Any(e => e.Id == id);
         }
     }
 }

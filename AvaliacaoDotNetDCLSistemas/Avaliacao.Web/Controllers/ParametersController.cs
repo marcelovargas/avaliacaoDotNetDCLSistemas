@@ -1,33 +1,31 @@
 ﻿namespace Avaliacao.Web.Controllers
 {
-    using Avaliacao.Core;
-    using Avaliacao.Data.Data;
-    using Avaliacao.Data.Models;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
+    using Avaliacao.Data.Data;
+    using Avaliacao.Data.Models;
 
-    public class CarSalesController : Controller
+    public class ParametersController : Controller
     {
         private readonly DataContext _context;
 
-        public CarSalesController(DataContext context)
+        public ParametersController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: CarSales
+        // GET: Parameters
         public async Task<IActionResult> Index()
         {
-            var list = await _context.Sales.ToListAsync();
-            var parameter = _context.Parameters.FirstOrDefault();
-
-            ViewBag.Salary = Calculation.Salary(list, parameter);
-            return View(list);
+            return View(await _context.Parameters.ToListAsync());
         }
 
-        // GET: CarSales/Details/5
+        // GET: Parameters/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,38 +33,39 @@
                 return NotFound();
             }
 
-            CarSale carSale = await _context.Sales
+            var parameter = await _context.Parameters
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carSale == null)
+            if (parameter == null)
             {
                 return NotFound();
             }
 
-            return View(carSale);
+            return View(parameter);
         }
 
-        // GET: CarSales/Create
+        // GET: Parameters/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: CarSales/Create
-
+        // POST: Parameters/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CarSale carSale)
+        public async Task<IActionResult> Create([Bind("Id,BaseSalary,Commission,BaseRate,SecondRate")] Parameter parameter)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(carSale);
+                _context.Add(parameter);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(carSale);
+            return View(parameter);
         }
 
-        // GET: CarSales/Edit/5
+        // GET: Parameters/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,21 +73,22 @@
                 return NotFound();
             }
 
-            CarSale carSale = await _context.Sales.FindAsync(id);
-            if (carSale == null)
+            var parameter = await _context.Parameters.FindAsync(id);
+            if (parameter == null)
             {
                 return NotFound();
             }
-            return View(carSale);
+            return View(parameter);
         }
 
-        // POST: CarSales/Edit/5
-
+        // POST: Parameters/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CarSale carSale)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BaseSalary,Commission,BaseRate,SecondRate")] Parameter parameter)
         {
-            if (id != carSale.Id)
+            if (id != parameter.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@
             {
                 try
                 {
-                    _context.Update(carSale);
+                    _context.Update(parameter);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarSaleExists(carSale.Id))
+                    if (!ParameterExists(parameter.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(carSale);
+            return View(parameter);
         }
 
-        // GET: CarSales/Delete/5
+        // GET: Parameters/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +124,30 @@
                 return NotFound();
             }
 
-            CarSale carSale = await _context.Sales
+            var parameter = await _context.Parameters
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carSale == null)
+            if (parameter == null)
             {
                 return NotFound();
             }
 
-            return View(carSale);
+            return View(parameter);
         }
 
-        // POST: CarSales/Delete/5
+        // POST: Parameters/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            CarSale carSale = await _context.Sales.FindAsync(id);
-            _context.Sales.Remove(carSale);
+            var parameter = await _context.Parameters.FindAsync(id);
+            _context.Parameters.Remove(parameter);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarSaleExists(int id)
+        private bool ParameterExists(int id)
         {
-            return _context.Sales.Any(e => e.Id == id);
+            return _context.Parameters.Any(e => e.Id == id);
         }
     }
 }
