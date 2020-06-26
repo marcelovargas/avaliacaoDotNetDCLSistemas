@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
     public class CarSalesController : Controller
@@ -148,6 +149,15 @@
         private bool CarSaleExists(int id)
         {
             return _context.Sales.Any(e => e.Id == id);
+        }
+
+        public IActionResult Clean()
+        {
+            var all = from c in _context.Sales select c;
+            _context.Sales.RemoveRange(all);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
