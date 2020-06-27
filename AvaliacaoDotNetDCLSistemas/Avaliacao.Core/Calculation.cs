@@ -18,11 +18,11 @@ namespace Avaliacao.Core
 
             double fixedCommission = parameter.FixedCommission;
             double fixedSalary = parameter.FixedSalary;
-            double percentage = 5 / 100;
+            double percentage = 0.05;
 
             foreach (CarSale item in list)
             {
-                cash = (item.Price * percentage) + fixedCommission;
+                cash = cash + (item.Price * percentage) + fixedCommission;
 
             }
 
